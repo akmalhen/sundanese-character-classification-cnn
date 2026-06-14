@@ -47,7 +47,8 @@ This architecture provides strong generalization while maintaining efficient inf
 ├── models/
 │   ├── aksara_model.keras
 │   ├── best_model.keras
-│   └── label_encoder.pkl
+│   ├── label_encoder.pkl
+│   └── training_history.json
 ├── model-aksara-sunda.ipynb
 └── README.md
 ```
@@ -68,7 +69,8 @@ pip install tensorflow opencv-python scikit-learn matplotlib seaborn
 models/
 ├── aksara_model.keras
 ├── best_model.keras
-└── label_encoder.pkl
+├── label_encoder.pkl
+└── training_history.json
 ```
 
 4. Load the exported `.keras` model into a FastAPI backend for real-time Sundanese character prediction.
