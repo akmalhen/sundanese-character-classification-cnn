@@ -1,38 +1,77 @@
-# Aksara Sunda Classification (CNN)
+# Sundanese Character Classification Using MobileNetV2 Transfer Learning
 
-Repositori ini berisi implementasi Deep Learning menggunakan **Convolutional Neural Network (CNN)** untuk mengklasifikasikan aksara Sunda. Model ini dibangun menggunakan TensorFlow/Keras dan dilatih menggunakan dataset gambar karakter Aksara Sunda.
+This repository presents a deep learning model for classifying 30 categories of Sundanese characters (*Aksara Sunda*) using MobileNetV2 transfer learning. Built with TensorFlow and Keras, the model serves as the core intelligence behind an interactive handwriting recognition platform.
 
-## 🚀 Teknologi yang Digunakan
-- **Bahasa Pemrograman:** Python (versi 3.x)
-- **Machine Learning Framework:** TensorFlow / Keras
-- **Computer Vision & Manipulasi Gambar:** OpenCV (`cv2`)
-- **Data preprocessing & Metrik evaluasi:** Scikit-Learn
-- **Visualisasi & Analitik Data:** Matplotlib, Seaborn, Numpy
+## Model Performance
 
-## 📊 Dataset
-Dataset yang digunakan berasal dari Kaggle: [Abdi Dwi Ramdani - Aksara Sunda](https://www.kaggle.com/datasets/abdidwiramdani/aksara-sunda).
-- **Jumlah Gambar:** 1800 gambar
-- **Dimensi Gambar (Input Shape):** 64x64 pixel dengan 3 channel (RGB)
-- Data telah dinormalisasi dengan membagi nilai piksel dengan `255.0` agar nilainya berada di antara 0 dan 1.
+- **Test Accuracy:** 94.44%
+- **Validation Accuracy:** ~97%
+- **Loss Function:** Sparse Categorical Crossentropy
+- **Optimizer:** Adam with learning rate scheduling (`ReduceLROnPlateau`)
+- **Early Stopping:** Training concluded at epoch 58 to prevent overfitting
 
-## 📁 Struktur Notebook (`cnn-aksara-sunda.ipynb`)
-Notebook ini berisikan tahap-tahap end-to-end pembuatan model:
-1. **Import Library:** Menginisialisasi semua library yang diperlukan.
-2. **Load Dataset:** Membaca dataset dari penyimpanan, me-resize gambar menjadi 64x64, dan menetapkan label untuk tiap karakter.
-3. **Visualisasi Data:** Menampilkan cuplikan gambar dari masing-masing kelas aksara Sunda untuk memastikan data terbaca dengan baik.
-4. **Data Preprocessing & Splitting:** Label Encoding dan membagi dataset menjadi data latih (*training*) dan data uji (*testing*).
-5. **Konstruksi Arsitektur CNN:** Membangun lapisan konvolusi, *pooling*, dan *dense layer* menggunakan Keras `Sequential`.
-6. **Training Model:** Proses pelatihan (*fit*) model beserta penggunaan *callbacks* (seperti `EarlyStopping` atau `ReduceLROnPlateau`).
-7. **Evaluasi & Prediksi:** Menampilkan kurva akurasi/loss, *Confusion Matrix*, dan *Classification Report*.
+## Technology Stack
 
-## ⚙️ Cara Menjalankan (How to Run)
-Jika Anda ingin menjalankan atau memodifikasi kode:
-1. Pastikan Anda sudah menginstall library pendukung. Jika menggunakan komputer lokal/virtual environment:
-   ```bash
-   pip install numpy matplotlib opencv-python seaborn tensorflow scikit-learn
-   ```
-2. Sesuaikan *path* dataset pada cell notebook (`data_dir`) ke tempat di mana Anda mengesktrak dataset aksara Sunda.
-3. Jalankan notebook dari atas ke bawah.
+- **Deep Learning:** TensorFlow 2.15+, Keras
+- **Computer Vision:** OpenCV (`cv2`)
+- **Data Science:** Scikit-learn, NumPy
+- **Visualization:** Matplotlib, Seaborn
 
-## 🤖 Pengembangan Lebih Lanjut (Rencana Integrasi Web)
-Model prediksi yang nanti telah dilatih dapat disave (contohnya menjadi format `.h5` atau format `TensorFlow.js`) dan diletakkan pada repositori Web secara terpisah untuk dibangun menjadi sistem *Handwriting Recognition* interaktif pada *canvas*.
+## Dataset Specifications
+
+The model was trained on a dataset sourced from Kaggle by Abdi Dwi Ramdani.
+
+- **Total Images:** 1,800 handwritten samples
+- **Input Resolution:** 128 × 128 pixels (RGB)
+- **Classes:** 30 categories covering both *Ngalagena* and *Swara* characters
+- **Preprocessing:** Pixel normalization to the range [0, 1] and dynamic data augmentation (rotation, zoom, and translation)
+
+## Model Architecture
+
+This project utilizes transfer learning with the MobileNetV2 architecture:
+
+1. **Base Model:** MobileNetV2 pretrained on ImageNet with early layers frozen.
+2. **Fine-Tuning:** The top 30 layers were unfrozen to specialize in Sundanese character stroke patterns.
+3. **Custom Classification Head:**
+   - Flatten Layer
+   - Dense Layer (512 Units)
+   - Batch Normalization
+   - Dropout (0.5)
+
+This architecture provides strong generalization while maintaining efficient inference performance.
+
+## Repository Structure
+
+```text
+.
+├── models/
+│   ├── aksara_model.keras
+│   ├── best_model.keras
+│   └── label_encoder.pkl
+├── model-aksara-sunda.ipynb
+└── README.md
+```
+
+## How to Use
+
+1. Install the required dependencies:
+
+```bash
+pip install tensorflow opencv-python scikit-learn matplotlib seaborn
+```
+
+2. Open `model-aksara-sunda.ipynb` using Jupyter Notebook or Visual Studio Code, then run all cells to preprocess the dataset, train the model, and evaluate its performance.
+
+3. The trained model and label encoder will be exported to:
+
+```text
+models/
+├── aksara_model.keras
+├── best_model.keras
+└── label_encoder.pkl
+```
+
+4. Load the exported `.keras` model into a FastAPI backend for real-time Sundanese character prediction.
+
+
+The platform provides real-time handwriting recognition and feedback through an interactive digital canvas designed to support the learning and preservation of Sundanese script.
